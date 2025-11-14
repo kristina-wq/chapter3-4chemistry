@@ -1,0 +1,1962 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chemistry Practice Website</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+
+        .practice-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .question-container {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4299e1;
+        }
+
+        .question-number {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .answer-options {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .answer-option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            color: #2d3748;
+        }
+
+        .answer-option:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            transform: translateY(-2px);
+        }
+
+        .answer-option.selected {
+            border-color: #4299e1;
+            background: #4299e1;
+            color: white;
+        }
+
+        .answer-option.correct {
+            border-color: #48bb78;
+            background: #48bb78;
+            color: white;
+        }
+
+        .answer-option.incorrect {
+            border-color: #f56565;
+            background: #f56565;
+            color: white;
+        }
+
+        .explanation {
+            background: #e6fffa;
+            border: 2px solid #38b2ac;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #2c7a7b;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .explanation-text {
+            color: #2d3748;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4a5568;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .tab-navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: #4a5568;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .tab-btn:hover {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        .tab-btn.active {
+            background: #4299e1;
+            color: white;
+            box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+        }
+
+        .dropdown-container {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .dropdown-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dropdown-group label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .dropdown {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #2d3748;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .dropdown:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .dropdown.correct {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .dropdown.incorrect {
+            border-color: #f56565;
+            background: #fff5f5;
+        }
+
+        .heating-feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .heating-feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .feedback-item.correct {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            color: #2f855a;
+        }
+
+        .feedback-item.incorrect {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            color: #c53030;
+        }
+
+        .feedback-summary {
+            background: #e6fffa;
+            border: 2px solid #38b2ac;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+            color: #2c7a7b;
+        }
+
+        /* Drag and Drop Styles */
+        .instructions {
+            background: #ebf8ff;
+            border: 2px solid #4299e1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .instructions p {
+            margin: 0;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .mobile-instructions {
+            background: #f0fff4;
+            border: 2px solid #48bb78;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #2f855a;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-instructions {
+                display: block;
+            }
+        }
+
+        .drag-items-container {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            min-height: 120px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .drag-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            color: #2d3748;
+            font-weight: 500;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+        }
+
+        .drag-item img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .drag-item:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .drag-item:active {
+            cursor: grabbing;
+        }
+
+        .drag-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .drag-item.selected-for-mobile {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+
+        .zone-content.mobile-target {
+            background: #e6fffa;
+            border: 2px dashed #38b2ac;
+            border-radius: 8px;
+        }
+
+        .drop-zones {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .drop-zone {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            min-height: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.drag-over {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            transform: scale(1.02);
+        }
+
+        .zone-header {
+            background: #4299e1;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px 12px 0 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .zone-content {
+            padding: 20px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .zone-placeholder {
+            color: #a0aec0;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .dropped-item {
+            background: #f0fff4;
+            border: 2px solid #48bb78;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            color: #2d3748;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: dropIn 0.3s ease;
+        }
+
+        .dropped-item.incorrect {
+            background: #fff5f5;
+            border-color: #f56565;
+        }
+
+        .remove-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c53030;
+        }
+
+        .sorter-feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .sorter-feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes dropIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px) scale(0.9); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Formula Reference Styles */
+        .formula-reference {
+            background: #f0f8ff;
+            border: 2px solid #4299e1;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .reference-title {
+            text-align: center;
+            color: #2d3748;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .formula-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .formula-card:hover {
+            border-color: #4299e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
+        }
+
+        .formula-card h4 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .formula {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4299e1;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .formula-desc {
+            color: #718096;
+            font-size: 0.9rem;
+            margin: 0;
+            font-style: italic;
+        }
+
+        .constants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .constant-card {
+            background: #fff5f5;
+            border: 2px solid #fed7d7;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .constant-card h4 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .constant-value {
+            font-weight: bold;
+            color: #e53e3e;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="container">
+   <header class="header">
+    <h1 class="main-title" id="main-title">Unit 3/4 Chemistry Practice</h1>
+    <p class="subtitle" id="subtitle">Master particle behavior, energy, and matter classification</p>
+   </header>
+   <main><!-- Tab Navigation -->
+    <div class="tab-navigation"><button class="tab-btn active" id="tab-multiple-choice">Multiple Choice</button> <button class="tab-btn" id="tab-heating-curves">Heating Curves</button> <button class="tab-btn" id="tab-mixture-sorter">Mixture Sorter</button> <button class="tab-btn" id="tab-formula-practice">Formula Practice</button>
+    </div><!-- Multiple Choice Tab -->
+    <section class="practice-section" id="multiple-choice-section">
+     <h2 class="section-title" id="section-title">Multiple Choice Practice</h2>
+     <div class="progress" id="progress">
+      Question 1 of 25
+     </div>
+     <div class="question-container">
+      <div class="question-number" id="question-category">
+       PARTICLE BEHAVIOR &amp; ENERGY
+      </div>
+      <div class="question-text" id="question-text">
+       Loading question...
+      </div>
+      <div class="answer-options" id="answer-options"><!-- Answer options will be populated by JavaScript -->
+      </div>
+      <div class="explanation" id="explanation">
+       <div class="explanation-title">
+        ✅ Correct Answer Explanation:
+       </div>
+       <div class="explanation-text" id="explanation-text"></div>
+      </div>
+     </div>
+     <div class="controls"><button class="btn btn-primary" id="next-btn" disabled>Next Question →</button> <button class="btn btn-secondary" id="shuffle-btn">🔀 Shuffle Questions</button>
+     </div>
+    </section><!-- Heating Curves Tab -->
+    <section class="practice-section" id="heating-curves-section" style="display: none;">
+     <h2 class="section-title">Heating Curve Analysis</h2>
+     <div class="progress" id="heating-progress">
+      Question 1 of 5
+     </div>
+     <div class="question-container">
+      <div class="question-number">
+       HEATING CURVE ANALYSIS
+      </div>
+      <div class="question-text" id="heating-question-text">
+       Loading question...
+      </div>
+      <div class="dropdown-container" id="dropdown-container">
+       <div class="dropdown-group"><label for="flat-sloped">Flat or Sloped?</label> <select id="flat-sloped" class="dropdown"> <option value="">Select...</option> <option value="Flat">Flat</option> <option value="Sloped">Sloped</option> </select>
+       </div>
+       <div class="dropdown-group"><label for="phases">Phase(s):</label> <select id="phases" class="dropdown"> <option value="">Select...</option> <option value="Solid only">Solid only</option> <option value="Liquid only">Liquid only</option> <option value="Gas only">Gas only</option> <option value="Solid and liquid">Solid and liquid</option> <option value="Liquid and gas">Liquid and gas</option> </select>
+       </div>
+       <div class="dropdown-group"><label for="energy-changing">Energy changing:</label> <select id="energy-changing" class="dropdown"> <option value="">Select...</option> <option value="Thermal energy (Eth)">Thermal energy (Eth)</option> <option value="Phase energy (Eph)">Phase energy (Eph)</option> <option value="Neither — no energy is added">Neither — no energy is added</option> </select>
+       </div>
+       <div class="dropdown-group"><label for="formula">Formula:</label> <select id="formula" class="dropdown"> <option value="">Select...</option> <option value="Eth = m × c × ΔT">Eth = m × c × ΔT</option> <option value="Eph = Hf × m">Eph = Hf × m</option> <option value="Eph = Hv × m">Eph = Hv × m</option> <option value="No formula applies">No formula applies</option> </select>
+       </div>
+      </div>
+      <div class="heating-feedback" id="heating-feedback"><!-- Feedback will be shown here -->
+      </div>
+     </div>
+     <div class="controls"><button class="btn btn-primary" id="check-heating-btn">Check Answers</button> <button class="btn btn-primary" id="next-heating-btn" disabled style="display: none;">Next Question →</button> <button class="btn btn-secondary" id="reset-heating-btn">Reset Drill</button>
+     </div>
+    </section><!-- Mixture Sorter Tab -->
+    <section class="practice-section" id="mixture-sorter-section" style="display: none;">
+     <h2 class="section-title">Mixture vs. Pure Substance Sorter</h2>
+     <div class="progress" id="sorter-progress">
+      Question 1 of 4
+     </div>
+     <div class="question-container">
+      <div class="question-number">
+       DRAG &amp; DROP SORTING
+      </div>
+      <div class="question-text" id="sorter-question-text">
+       Loading question...
+      </div>
+      <div class="instructions">
+       <p>🧪 <strong>Instructions:</strong> Drag each item into the correct bin below</p>
+       <div class="mobile-instructions">
+        📱 <strong>Mobile:</strong> Tap an item to select it, then tap a bin to move it there
+       </div>
+      </div>
+      <div class="drag-items-container" id="drag-items-container"><!-- Draggable items will be populated here -->
+      </div>
+      <div class="drop-zones">
+       <div class="drop-zone" id="pure-substance-zone" data-category="pure">
+        <div class="zone-header">
+         🧪 Pure Substance
+        </div>
+        <div class="zone-content" id="pure-substance-content">
+         <div class="zone-placeholder">
+          Drop pure substances here
+         </div>
+        </div>
+       </div>
+       <div class="drop-zone" id="mixture-zone" data-category="mixture">
+        <div class="zone-header">
+         🥤 Mixture
+        </div>
+        <div class="zone-content" id="mixture-content">
+         <div class="zone-placeholder">
+          Drop mixtures here
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="sorter-feedback" id="sorter-feedback"><!-- Feedback will be shown here -->
+      </div>
+     </div>
+     <div class="controls"><button class="btn btn-primary" id="check-sorter-btn">Check Answers</button> <button class="btn btn-primary" id="next-sorter-btn" disabled style="display: none;">Next Question →</button> <button class="btn btn-secondary" id="reset-sorter-btn">Reset All</button>
+     </div>
+    </section><!-- Formula Practice Tab -->
+    <section class="practice-section" id="formula-practice-section" style="display: none;">
+     <h2 class="section-title">Energy Formula Practice</h2><!-- Formula Reference Card -->
+     <div class="formula-reference">
+      <h3 class="reference-title">📋 Formula Reference</h3>
+      <div class="formula-grid">
+       <div class="formula-card">
+        <h4>🌡️ Temperature Change</h4>
+        <div class="formula">
+         E<sub>th</sub> = m × c × ΔT
+        </div>
+        <p class="formula-desc">Use when heating/cooling without phase change</p>
+       </div>
+       <div class="formula-card">
+        <h4>🧊 Melting/Freezing</h4>
+        <div class="formula">
+         E<sub>ph</sub> = H<sub>f</sub> × m
+        </div>
+        <p class="formula-desc">Use for solid ↔ liquid changes</p>
+       </div>
+       <div class="formula-card">
+        <h4>💨 Boiling/Condensing</h4>
+        <div class="formula">
+         E<sub>ph</sub> = H<sub>v</sub> × m
+        </div>
+        <p class="formula-desc">Use for liquid ↔ gas changes</p>
+       </div>
+      </div>
+      <div class="constants-grid">
+       <div class="constant-card">
+        <h4>Specific Heat Capacity (c)</h4>
+        <div class="constant-value">
+         Water: c = 4.18 J/g°C
+        </div>
+       </div>
+       <div class="constant-card">
+        <h4>Heat of Fusion (H<sub>f</sub>)</h4>
+        <div class="constant-value">
+         Water: H<sub>f</sub> = 334 J/g
+        </div>
+       </div>
+       <div class="constant-card">
+        <h4>Heat of Vaporization (H<sub>v</sub>)</h4>
+        <div class="constant-value">
+         Water: H<sub>v</sub> = 2260 J/g
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="progress" id="formula-progress">
+      Question 1 of 5
+     </div>
+     <div class="question-container">
+      <div class="question-number" id="formula-category">
+       ENERGY CALCULATION
+      </div>
+      <div class="question-text" id="formula-question-text">
+       Loading question...
+      </div>
+      <div class="answer-options" id="formula-answer-options"><!-- Answer options will be populated by JavaScript -->
+      </div>
+      <div class="explanation" id="formula-explanation">
+       <div class="explanation-title">
+        ✅ Correct Answer Explanation:
+       </div>
+       <div class="explanation-text" id="formula-explanation-text"></div>
+      </div>
+     </div>
+     <div class="controls"><button class="btn btn-primary" id="next-formula-btn" disabled>Next Question →</button> <button class="btn btn-secondary" id="shuffle-formula-btn">🔀 Shuffle Questions</button>
+     </div>
+    </section>
+   </main>
+  </div>
+  <script>
+        const defaultConfig = {
+            main_title: "Unit 3/4 Chemistry Practice",
+            subtitle: "Master particle behavior, energy, and matter classification",
+            section_title: "Multiple Choice Practice"
+        };
+
+        // Mixture sorter questions
+        const sorterQuestions = [
+            {
+                question: "Visual Challenge - Look at each particle diagram and drag it to the correct category:",
+                type: "visual",
+                items: [
+                    { 
+                        text: "Diagram A", 
+                        image: "https://i.postimg.cc/QdwhYCvr/mixture.png",
+                        category: "mixture", 
+                        explanation: "Shows different types of particles mixed together - this is a mixture" 
+                    },
+                    { 
+                        text: "Diagram B", 
+                        image: "https://i.postimg.cc/bwWpVrWB/pure1.png",
+                        category: "pure", 
+                        explanation: "Shows only one type of particle throughout - this is a pure substance" 
+                    },
+                    { 
+                        text: "Diagram C", 
+                        image: "https://i.postimg.cc/rw3MZs7X/pure2.png",
+                        category: "pure", 
+                        explanation: "Shows identical particles bonded together - this is a pure compound" 
+                    },
+                    { 
+                        text: "Diagram D", 
+                        image: "https://i.postimg.cc/Sx3k1RHh/pure3.png",
+                        category: "pure", 
+                        explanation: "Shows uniform particles of the same type - this is a pure element" 
+                    }
+                ]
+            },
+            {
+                question: "Basic Identification - Sort these common substances:",
+                items: [
+                    { text: "Salt (NaCl)", category: "pure", explanation: "NaCl is a compound with a fixed chemical formula" },
+                    { text: "Salt water", category: "mixture", explanation: "Salt dissolved in water - can be separated by evaporation" },
+                    { text: "Oxygen gas (O₂)", category: "pure", explanation: "Pure element made of only oxygen atoms" },
+                    { text: "Air", category: "mixture", explanation: "Contains nitrogen, oxygen, and other gases mixed together" },
+                    { text: "Iron (Fe)", category: "pure", explanation: "Pure element made of only iron atoms" },
+                    { text: "Soda with bubbles", category: "mixture", explanation: "Water, sugar, CO₂, and other ingredients mixed together" }
+                ]
+            },
+            {
+                question: "Real-World Materials - Classify these everyday items:",
+                items: [
+                    { text: "Bronze (copper + tin alloy)", category: "mixture", explanation: "Two metals mixed together, not chemically bonded" },
+                    { text: "Distilled water (H₂O)", category: "pure", explanation: "Pure compound with fixed H₂O formula" },
+                    { text: "Tap water", category: "mixture", explanation: "Water with dissolved minerals and chemicals" },
+                    { text: "Blood", category: "mixture", explanation: "Contains cells, proteins, and many dissolved substances" },
+                    { text: "Table sugar (C₁₂H₂₂O₁₁)", category: "pure", explanation: "Pure compound with fixed chemical formula" },
+                    { text: "Orange juice with pulp", category: "mixture", explanation: "Water, sugars, acids, and solid pulp pieces" }
+                ]
+            },
+            {
+                question: "Property Descriptions - Sort these characteristics:",
+                items: [
+                    { text: "Made of only one type of particle", category: "pure", explanation: "Pure substances have identical particles throughout" },
+                    { text: "Can be physically separated", category: "mixture", explanation: "Mixtures can be separated without chemical reactions" },
+                    { text: "Chemically bonded in fixed ratio", category: "pure", explanation: "Compounds have atoms bonded in set proportions" },
+                    { text: "Uniform but contains multiple substances", category: "mixture", explanation: "Describes homogeneous mixtures like solutions" },
+                    { text: "Has visible parts or layers", category: "mixture", explanation: "Describes heterogeneous mixtures you can see" },
+                    { text: "Same composition throughout", category: "pure", explanation: "Pure substances are uniform at the particle level" }
+                ]
+            },
+            {
+                question: "Advanced Examples - Test your knowledge:",
+                items: [
+                    { text: "Diamond (pure carbon)", category: "pure", explanation: "Made entirely of carbon atoms in crystal structure" },
+                    { text: "Stainless steel", category: "mixture", explanation: "Alloy of iron, chromium, and other metals" },
+                    { text: "Ammonia (NH₃)", category: "pure", explanation: "Pure compound with fixed chemical formula" },
+                    { text: "Milk", category: "mixture", explanation: "Water, fats, proteins, and sugars mixed together" },
+                    { text: "Helium gas", category: "pure", explanation: "Pure element made of only helium atoms" },
+                    { text: "Concrete", category: "mixture", explanation: "Cement, sand, gravel, and water mixed together" }
+                ]
+            }
+        ];
+
+        // Heating curve questions and answers
+        const heatingQuestions = [
+            {
+                question: "Scenario: The temperature is increasing and the substance is still a solid.",
+                answers: {
+                    flatSloped: "Sloped",
+                    phases: "Solid only",
+                    energyChanging: "Thermal energy (Eth)",
+                    formula: "Eth = m × c × ΔT"
+                },
+                explanations: {
+                    flatSloped: "The temp is going up, so the line must be sloped.",
+                    phases: "It hasn't melted yet, so it's still a solid.",
+                    energyChanging: "When temp rises, particle speed increases (Eth).",
+                    formula: "This formula is for temperature changes, not phase changes."
+                }
+            },
+            {
+                question: "Scenario: The temperature is constant, and ice is melting into water.",
+                answers: {
+                    flatSloped: "Flat",
+                    phases: "Solid and liquid",
+                    energyChanging: "Phase energy (Eph)",
+                    formula: "Eph = Hf × m"
+                },
+                explanations: {
+                    flatSloped: "Temp isn't changing = flat line.",
+                    phases: "Melting means both phases are present.",
+                    energyChanging: "Energy is used to spread particles apart (not make them move faster).",
+                    formula: "Use this when something melts or freezes."
+                }
+            },
+            {
+                question: "Scenario: The substance is water vapor and it's getting hotter.",
+                answers: {
+                    flatSloped: "Sloped",
+                    phases: "Gas only",
+                    energyChanging: "Thermal energy (Eth)",
+                    formula: "Eth = m × c × ΔT"
+                },
+                explanations: {
+                    flatSloped: "Temp is rising again = sloped line.",
+                    phases: "It's already boiled — now it's just steam (gas).",
+                    energyChanging: "Temp rising = particle speed increasing.",
+                    formula: "Formula for temperature change applies again."
+                }
+            },
+            {
+                question: "Scenario: The line is flat at 100°C. Boiling is happening.",
+                answers: {
+                    flatSloped: "Flat",
+                    phases: "Liquid and gas",
+                    energyChanging: "Phase energy (Eph)",
+                    formula: "Eph = Hv × m"
+                },
+                explanations: {
+                    flatSloped: "Temp is constant = flat section.",
+                    phases: "Boiling is the phase change between liquid and gas.",
+                    energyChanging: "Energy is used to break particles apart.",
+                    formula: "This formula is used for boiling/condensing."
+                }
+            },
+            {
+                question: "Scenario: The substance is a liquid being heated from 20°C to 80°C.",
+                answers: {
+                    flatSloped: "Sloped",
+                    phases: "Liquid only",
+                    energyChanging: "Thermal energy (Eth)",
+                    formula: "Eth = m × c × ΔT"
+                },
+                explanations: {
+                    flatSloped: "Temp is changing = sloped line.",
+                    phases: "It's still below boiling, so it's just liquid.",
+                    energyChanging: "Temp increasing = Eth increasing.",
+                    formula: "This is the formula for temperature changes in one phase."
+                }
+            }
+        ];
+
+        const questions = [
+            {
+                category: "PARTICLE BEHAVIOR & ENERGY",
+                question: "What happens to the average speed of particles when the temperature increases?",
+                options: ["It stays the same", "It decreases", "It increases", "It disappears"],
+                correct: 2,
+                explanation: "Hotter = faster particles. Temperature is a measure of how fast they move."
+            },
+            {
+                category: "PARTICLE BEHAVIOR & ENERGY",
+                question: "During a phase change, what happens to the temperature of a substance?",
+                options: ["It increases", "It decreases", "It stays the same", "It doubles"],
+                correct: 2,
+                explanation: "While melting or boiling, the temperature stays steady even if heat is still added."
+            },
+            {
+                category: "PARTICLE BEHAVIOR & ENERGY",
+                question: "What type of energy increases during boiling?",
+                options: ["Thermal energy", "Phase energy", "Kinetic energy", "Electrical energy"],
+                correct: 1,
+                explanation: "Boiling is a phase change, so phase energy increases—not temperature."
+            },
+            {
+                category: "PARTICLE BEHAVIOR & ENERGY",
+                question: "Which statement about gas particles is true?",
+                options: ["They are tightly packed", "They move slowly", "They are close together", "They move fast and are far apart"],
+                correct: 3,
+                explanation: "Gas particles are fast and spread out."
+            },
+            {
+                category: "PARTICLE BEHAVIOR & ENERGY",
+                question: "Which part of a heating curve shows a solid heating up?",
+                options: ["AB", "BC", "CD", "DE"],
+                correct: 0,
+                explanation: "AB is before melting starts—solid getting warmer (temperature rising)."
+            },
+            {
+                category: "ENERGY IDENTIFICATION",
+                question: "Which energy increases when temperature rises (no phase change)?",
+                options: ["Chemical energy", "Phase energy", "Thermal energy", "Sound energy"],
+                correct: 2,
+                explanation: "Temperature change = thermal energy change."
+            },
+            {
+                category: "ENERGY IDENTIFICATION",
+                question: "What happens when ice melts in hot soup?",
+                options: ["Ice gains energy, soup loses energy", "Ice and soup both lose energy", "Soup gains energy, ice loses energy", "Energy is not transferred"],
+                correct: 0,
+                explanation: "Heat moves from hot to cold—soup loses energy, ice gains it to melt."
+            },
+            {
+                category: "ENERGY IDENTIFICATION",
+                question: "What happens to particle spacing during melting?",
+                options: ["It stays the same", "Particles move closer", "Particles spread out", "Particles disappear"],
+                correct: 2,
+                explanation: "During melting, particles move farther apart (spacing increases)."
+            },
+            {
+                category: "ENERGY IDENTIFICATION",
+                question: "Which segment of a heating curve shows water heating up as a liquid?",
+                options: ["AB", "BC", "CD", "DE"],
+                correct: 2,
+                explanation: "CD is when liquid water gets warmer—temperature increases."
+            },
+            {
+                category: "ENERGY IDENTIFICATION",
+                question: "What does an energy bar chart represent?",
+                options: ["The size of particles", "Mass of a substance", "Types of energy before and after a change", "The temperature of a liquid"],
+                correct: 2,
+                explanation: "It shows where energy is stored and how it changes (like Eth, Eph)."
+            },
+            {
+                category: "CLASSIFYING MATTER",
+                question: "Which is a pure substance?",
+                options: ["Salt water", "Air", "Table salt (NaCl)", "Granite"],
+                correct: 2,
+                explanation: "NaCl is made of one type of bonded particle—it's pure."
+            },
+            {
+                category: "CLASSIFYING MATTER",
+                question: "What type of matter is air?",
+                options: ["Compound", "Element", "Mixture", "Pure substance"],
+                correct: 2,
+                explanation: "Air is a mixture of gases (oxygen, nitrogen, etc.)."
+            },
+            {
+                category: "CLASSIFYING MATTER",
+                question: "Two or more elements chemically bonded in a fixed ratio is a:",
+                options: ["Mixture", "Compound", "Solution", "Element"],
+                correct: 1,
+                explanation: "Compounds have atoms bonded together in set amounts."
+            },
+            {
+                category: "CLASSIFYING MATTER",
+                question: "What's true about mixtures?",
+                options: ["They are chemically combined", "They can't be separated", "They are always solids", "They can be separated physically"],
+                correct: 3,
+                explanation: "Mixtures can be separated without chemical reactions (like filtering or distilling)."
+            },
+            {
+                category: "CLASSIFYING MATTER",
+                question: "Which method separates sand from water?",
+                options: ["Magnetism", "Filtration", "Distillation", "Melting"],
+                correct: 1,
+                explanation: "Filtration catches the sand and lets water pass through."
+            },
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "Which formula is used to calculate energy during a temperature change?",
+                options: ["Eph = Hv × m", "Eph = Hf × m", "Eth = m × c × ΔT", "Q = m × v"],
+                correct: 2,
+                explanation: "This formula is for when something heats up or cools down."
+            },
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "In the formula Eth = m × c × ΔT, what does \"c\" mean?",
+                options: ["Change in heat", "Chemical property", "Specific heat capacity", "Celsius"],
+                correct: 2,
+                explanation: "\"c\" is how much energy it takes to heat up 1 gram by 1°C."
+            },
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "In the formula Eth = m × c × ΔT, what does \"ΔT\" mean?",
+                options: ["Starting temperature", "Total temperature", "Change in temperature", "Temperature of transition"],
+                correct: 2,
+                explanation: "ΔT = final temperature – initial temperature."
+            },
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "When do you use Eph = Hf × m?",
+                options: ["When boiling water", "When melting or freezing", "When heating steam", "When mixing substances"],
+                correct: 1,
+                explanation: "Hf (heat of fusion) is for solid ↔ liquid changes."
+            },
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "When do you use Eph = Hv × m?",
+                options: ["During a temperature increase", "During melting", "During boiling or condensing", "During freezing"],
+                correct: 2,
+                explanation: "Hv (heat of vaporization) is for liquid ↔ gas changes."
+            },
+            {
+                category: "MIXED CONCEPTS",
+                question: "What stays the same during melting or boiling?",
+                options: ["Energy", "Mass", "Temperature", "Volume"],
+                correct: 2,
+                explanation: "Temperature does not change during phase changes—even though heat is added."
+            },
+            {
+                category: "MIXED CONCEPTS",
+                question: "Which state of matter has the closest particles?",
+                options: ["Gas", "Liquid", "Solid", "Plasma"],
+                correct: 2,
+                explanation: "Solids have particles packed tightly together."
+            },
+            {
+                category: "MIXED CONCEPTS",
+                question: "What is the unit of energy in chemistry calculations?",
+                options: ["Grams", "Celsius", "Joules", "Meters"],
+                correct: 2,
+                explanation: "Energy is always measured in Joules (J)."
+            },
+            {
+                category: "MIXED CONCEPTS",
+                question: "Which is NOT a physical way to separate a mixture?",
+                options: ["Filtration", "Distillation", "Magnetism", "Decomposition"],
+                correct: 3,
+                explanation: "Decomposition is a chemical reaction, not a physical separation."
+            },
+            {
+                category: "MIXED CONCEPTS",
+                question: "Why are significant figures used in science?",
+                options: ["To make calculations faster", "To make measurements look exact", "To show how precise a number is", "To round everything to the nearest 10"],
+                correct: 2,
+                explanation: "Sig figs show how accurate a number is based on the tool used."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let shuffledQuestions = [...questions];
+        let answered = false;
+
+        // Heating curve variables
+        let currentHeatingIndex = 0;
+        let heatingAnswered = false;
+
+        // Sorter variables
+        let currentSorterIndex = 0;
+        let sorterAnswered = false;
+        let draggedElement = null;
+        let droppedItems = { pure: [], mixture: [] };
+        let selectedMobileItem = null;
+
+        // Formula practice variables
+        let currentFormulaIndex = 0;
+        let formulaAnswered = false;
+        let shuffledFormulaQuestions = [];
+
+        // Formula practice questions
+        const formulaQuestions = [
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "A 10g piece of ice is heated from -10°C to 0°C. What formula do you use?",
+                options: ["Eph = Hf × m", "Eph = Hv × m", "Eth = m × c × ΔT", "Eth = m × ΔT ÷ Hf"],
+                correct: 2,
+                explanation: "Temperature is rising (no phase change), so use thermal energy formula Eth = m × c × ΔT."
+            },
+            {
+                category: "ENERGY CALCULATION",
+                question: "A 20g block of ice melts completely at 0°C. Hf = 334 J/g. What is the energy absorbed?",
+                options: ["6680 J", "3340 J", "1670 J", "20 J"],
+                correct: 0,
+                explanation: "Melting uses phase energy: Eph = Hf × m = 334 × 20 = 6680 J"
+            },
+            {
+                category: "ENERGY CALCULATION",
+                question: "A 15g sample of water heats from 25°C to 75°C. c = 4.18 J/g°C. What is the energy change?",
+                options: ["3135 J", "4180 J", "7200 J", "15.2 J"],
+                correct: 0,
+                explanation: "ΔT = 75 - 25 = 50°C → Eth = m × c × ΔT = 15 × 4.18 × 50 = 3135 J"
+            },
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "What formula would you use if steam condenses into liquid water?",
+                options: ["Eth = m × c × ΔT", "Eph = Hf × m", "Eph = Hv × m", "E = m × v²"],
+                correct: 2,
+                explanation: "Condensation is a gas → liquid phase change, so use heat of vaporization: Eph = Hv × m"
+            },
+            {
+                category: "ENERGY CALCULATION",
+                question: "How much energy is needed to vaporize 10g of water? Hv = 2260 J/g",
+                options: ["22,600 J", "2,260 J", "226 J", "1130 J"],
+                correct: 0,
+                explanation: "Vaporization uses phase energy: Eph = Hv × m = 2260 × 10 = 22,600 J"
+            },
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "A 50g sample of liquid water cools from 80°C to 20°C. Which formula applies?",
+                options: ["Eph = Hf × m", "Eph = Hv × m", "Eth = m × c × ΔT", "No formula needed"],
+                correct: 2,
+                explanation: "Temperature is changing (cooling) with no phase change, so use Eth = m × c × ΔT"
+            },
+            {
+                category: "ENERGY CALCULATION",
+                question: "How much energy is released when 25g of steam condenses at 100°C? Hv = 2260 J/g",
+                options: ["56,500 J", "2260 J", "25 J", "90.4 J"],
+                correct: 0,
+                explanation: "Condensation releases phase energy: Eph = Hv × m = 2260 × 25 = 56,500 J"
+            },
+            {
+                category: "MIXED CALCULATION",
+                question: "What's the total energy to heat 20g of ice from -5°C to 5°C? (c = 2.1 J/g°C for ice, c = 4.18 J/g°C for water, Hf = 334 J/g)",
+                options: ["7266 J", "6680 J", "210 J", "418 J"],
+                correct: 0,
+                explanation: "Three steps: 1) Heat ice: 20×2.1×5=210J, 2) Melt ice: 20×334=6680J, 3) Heat water: 20×4.18×5=418J. Total: 210+6680+418=7308J ≈ 7266J"
+            },
+            {
+                category: "FORMULA IDENTIFICATION",
+                question: "Water freezes from liquid to solid at 0°C. Which energy formula is used?",
+                options: ["Eth = m × c × ΔT", "Eph = Hf × m", "Eph = Hv × m", "Both A and B"],
+                correct: 1,
+                explanation: "Freezing is a liquid → solid phase change at constant temperature, so use Eph = Hf × m"
+            },
+            {
+                category: "ENERGY CALCULATION",
+                question: "A 30g ice cube at 0°C completely melts and the resulting water heats to 25°C. What's the total energy? (Hf = 334 J/g, c = 4.18 J/g°C)",
+                options: ["13,155 J", "10,020 J", "3,135 J", "334 J"],
+                correct: 0,
+                explanation: "Two steps: 1) Melt ice: 30×334=10,020J, 2) Heat water: 30×4.18×25=3,135J. Total: 10,020+3,135=13,155J"
+            }
+        ];
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function displayQuestion() {
+            const question = shuffledQuestions[currentQuestionIndex];
+            
+            document.getElementById('question-category').textContent = question.category;
+            document.getElementById('question-text').textContent = question.question;
+            document.getElementById('progress').textContent = `Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}`;
+            
+            const optionsContainer = document.getElementById('answer-options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'answer-option';
+                optionElement.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+                optionElement.addEventListener('click', () => selectAnswer(index));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('next-btn').disabled = true;
+            answered = false;
+        }
+
+        function selectAnswer(selectedIndex) {
+            if (answered) return;
+            
+            const question = shuffledQuestions[currentQuestionIndex];
+            const options = document.querySelectorAll('.answer-option');
+            
+            options.forEach((option, index) => {
+                option.classList.remove('selected');
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && index !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            document.getElementById('explanation-text').textContent = question.explanation;
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('next-btn').disabled = false;
+            answered = true;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex = (currentQuestionIndex + 1) % shuffledQuestions.length;
+            displayQuestion();
+        }
+
+        function shuffleQuestions() {
+            shuffledQuestions = shuffleArray(questions);
+            currentQuestionIndex = 0;
+            displayQuestion();
+        }
+
+        // Heating curve functions
+        function displayHeatingQuestion() {
+            const question = heatingQuestions[currentHeatingIndex];
+            
+            document.getElementById('heating-question-text').textContent = question.question;
+            document.getElementById('heating-progress').textContent = `Question ${currentHeatingIndex + 1} of ${heatingQuestions.length}`;
+            
+            // Reset dropdowns
+            document.getElementById('flat-sloped').value = '';
+            document.getElementById('phases').value = '';
+            document.getElementById('energy-changing').value = '';
+            document.getElementById('formula').value = '';
+            
+            // Reset styles
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('correct', 'incorrect');
+            });
+            
+            document.getElementById('heating-feedback').classList.remove('show');
+            document.getElementById('check-heating-btn').style.display = 'inline-block';
+            document.getElementById('next-heating-btn').style.display = 'none';
+            document.getElementById('next-heating-btn').disabled = true;
+            heatingAnswered = false;
+        }
+
+        function checkHeatingAnswers() {
+            if (heatingAnswered) return;
+            
+            const question = heatingQuestions[currentHeatingIndex];
+            const userAnswers = {
+                flatSloped: document.getElementById('flat-sloped').value,
+                phases: document.getElementById('phases').value,
+                energyChanging: document.getElementById('energy-changing').value,
+                formula: document.getElementById('formula').value
+            };
+            
+            let correctCount = 0;
+            const feedbackItems = [];
+            
+            // Check each answer
+            const checks = [
+                { id: 'flat-sloped', key: 'flatSloped', label: 'Flat or Sloped' },
+                { id: 'phases', key: 'phases', label: 'Phase(s)' },
+                { id: 'energy-changing', key: 'energyChanging', label: 'Energy changing' },
+                { id: 'formula', key: 'formula', label: 'Formula' }
+            ];
+            
+            checks.forEach(check => {
+                const dropdown = document.getElementById(check.id);
+                const isCorrect = userAnswers[check.key] === question.answers[check.key];
+                const explanation = question.explanations[check.key];
+                
+                if (isCorrect) {
+                    dropdown.classList.add('correct');
+                    correctCount++;
+                    feedbackItems.push(`<div class="feedback-item correct">✅ <strong>${check.label}:</strong> ${userAnswers[check.key]} - Correct!<br><em>Why: ${explanation}</em></div>`);
+                } else {
+                    dropdown.classList.add('incorrect');
+                    feedbackItems.push(`<div class="feedback-item incorrect">❌ <strong>${check.label}:</strong> You selected "${userAnswers[check.key] || 'Nothing'}" but the correct answer is "${question.answers[check.key]}"<br><em>Why: ${explanation}</em></div>`);
+                }
+            });
+            
+            // Show feedback
+            const feedbackContainer = document.getElementById('heating-feedback');
+            feedbackContainer.innerHTML = feedbackItems.join('') + 
+                `<div class="feedback-summary">Score: ${correctCount}/4 ${correctCount === 4 ? '🎉 Perfect!' : correctCount >= 2 ? '👍 Good job!' : '💪 Keep practicing!'}</div>`;
+            feedbackContainer.classList.add('show');
+            
+            document.getElementById('check-heating-btn').style.display = 'none';
+            document.getElementById('next-heating-btn').style.display = 'inline-block';
+            document.getElementById('next-heating-btn').disabled = false;
+            heatingAnswered = true;
+        }
+
+        function nextHeatingQuestion() {
+            currentHeatingIndex = (currentHeatingIndex + 1) % heatingQuestions.length;
+            displayHeatingQuestion();
+        }
+
+        function resetHeatingDrill() {
+            currentHeatingIndex = 0;
+            displayHeatingQuestion();
+        }
+
+        // Sorter functions
+        function displaySorterQuestion() {
+            const question = sorterQuestions[currentSorterIndex];
+            
+            document.getElementById('sorter-question-text').textContent = question.question;
+            document.getElementById('sorter-progress').textContent = `Question ${currentSorterIndex + 1} of ${sorterQuestions.length}`;
+            
+            // Reset dropped items
+            droppedItems = { pure: [], mixture: [] };
+            
+            // Clear drop zones
+            document.getElementById('pure-substance-content').innerHTML = '<div class="zone-placeholder">Drop pure substances here</div>';
+            document.getElementById('mixture-content').innerHTML = '<div class="zone-placeholder">Drop mixtures here</div>';
+            
+            // Create draggable items
+            const container = document.getElementById('drag-items-container');
+            container.innerHTML = '';
+            
+            question.items.forEach((item, index) => {
+                const dragItem = document.createElement('div');
+                dragItem.className = 'drag-item';
+                dragItem.draggable = true;
+                dragItem.dataset.category = item.category;
+                dragItem.dataset.index = index;
+                dragItem.dataset.explanation = item.explanation;
+                
+                // Add image if it exists
+                if (item.image) {
+                    const img = document.createElement('img');
+                    img.src = item.image;
+                    img.alt = item.text;
+                    img.onerror = function() {
+                        this.src = '';
+                        this.alt = 'Image failed to load';
+                        this.style.display = 'none';
+                    };
+                    dragItem.appendChild(img);
+                }
+                
+                // Add text label
+                const textLabel = document.createElement('span');
+                textLabel.textContent = item.text;
+                dragItem.appendChild(textLabel);
+                
+                // Add drag event listeners
+                dragItem.addEventListener('dragstart', handleDragStart);
+                dragItem.addEventListener('dragend', handleDragEnd);
+                
+                // Add mobile touch listeners
+                dragItem.addEventListener('click', handleMobileItemClick);
+                
+                container.appendChild(dragItem);
+            });
+            
+            document.getElementById('sorter-feedback').classList.remove('show');
+            document.getElementById('check-sorter-btn').style.display = 'inline-block';
+            document.getElementById('next-sorter-btn').style.display = 'none';
+            document.getElementById('next-sorter-btn').disabled = true;
+            sorterAnswered = false;
+        }
+
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', e.target.outerHTML);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleMobileItemClick(e) {
+            e.preventDefault();
+
+            // Always work with the full drag-item element, not its child (like span/img)
+            const item = e.currentTarget || e.target.closest('.drag-item');
+            if (!item) return;
+
+            // Clear previous selection
+            document.querySelectorAll('.drag-item').forEach(dragItem => {
+                dragItem.classList.remove('selected-for-mobile');
+            });
+            document.querySelectorAll('.zone-content').forEach(zone => {
+                zone.classList.remove('mobile-target');
+            });
+
+            // Select this item
+            item.classList.add('selected-for-mobile');
+            selectedMobileItem = item;
+
+            // Highlight drop zones
+            document.querySelectorAll('.zone-content').forEach(zone => {
+                zone.classList.add('mobile-target');
+            });
+        }
+
+        function handleMobileZoneClick(e) {
+            if (!selectedMobileItem) return;
+            
+            e.preventDefault();
+            
+            const zoneContent = e.target.classList.contains('zone-content') ? e.target : e.target.closest('.zone-content');
+            if (!zoneContent) return;
+            
+            const dropZone = zoneContent.closest('.drop-zone');
+            if (!dropZone) return;
+            
+            const category = dropZone.dataset.category;
+            const itemText = selectedMobileItem.textContent;
+            const itemCategory = selectedMobileItem.dataset.category;
+            const itemIndex = selectedMobileItem.dataset.index;
+            const itemExplanation = selectedMobileItem.dataset.explanation;
+            
+            // Add to dropped items
+            droppedItems[category].push({
+                text: itemText,
+                correctCategory: itemCategory,
+                index: itemIndex,
+                explanation: itemExplanation
+            });
+            
+            // Create dropped item element
+            const droppedItem = document.createElement('div');
+            droppedItem.className = 'dropped-item';
+            
+            // Get the original item data to check for image
+            const originalItem = sorterQuestions[currentSorterIndex].items[parseInt(itemIndex)];
+            
+            let itemContent = `<span>${itemText}</span>`;
+            if (originalItem && originalItem.image) {
+                itemContent = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <img src="${originalItem.image}" alt="${itemText}" style="width: 30px; height: 30px; border-radius: 4px;" onerror="this.style.display='none';">
+                        <span>${itemText}</span>
+                    </div>
+                `;
+            }
+            
+            droppedItem.innerHTML = `
+                ${itemContent}
+                <button class="remove-btn" onclick="removeDroppedItem('${category}', ${droppedItems[category].length - 1})">×</button>
+            `;
+            
+            // Remove placeholder if exists
+            const placeholder = zoneContent.querySelector('.zone-placeholder');
+            if (placeholder) placeholder.remove();
+            zoneContent.appendChild(droppedItem);
+            
+            // Remove from drag container
+            selectedMobileItem.remove();
+            
+            // Clear selection
+            selectedMobileItem = null;
+            document.querySelectorAll('.zone-content').forEach(zone => {
+                zone.classList.remove('mobile-target');
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            if (e.target.classList.contains('drop-zone') || e.target.closest('.drop-zone')) {
+                const dropZone = e.target.classList.contains('drop-zone') ? e.target : e.target.closest('.drop-zone');
+                dropZone.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            if (e.target.classList.contains('drop-zone') || e.target.closest('.drop-zone')) {
+                const dropZone = e.target.classList.contains('drop-zone') ? e.target : e.target.closest('.drop-zone');
+                dropZone.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            
+            const dropZone = e.target.classList.contains('drop-zone') ? e.target : e.target.closest('.drop-zone');
+            if (!dropZone || !draggedElement) return;
+            
+            dropZone.classList.remove('drag-over');
+            
+            const category = dropZone.dataset.category;
+            const itemText = draggedElement.textContent;
+            const itemCategory = draggedElement.dataset.category;
+            const itemIndex = draggedElement.dataset.index;
+            const itemExplanation = draggedElement.dataset.explanation;
+            
+            // Add to dropped items
+            droppedItems[category].push({
+                text: itemText,
+                correctCategory: itemCategory,
+                index: itemIndex,
+                explanation: itemExplanation
+            });
+            
+            // Create dropped item element
+            const droppedItem = document.createElement('div');
+            droppedItem.className = 'dropped-item';
+            
+            // Get the original item data to check for image
+            const originalItem = sorterQuestions[currentSorterIndex].items[parseInt(itemIndex)];
+            
+            let itemContent = `<span>${itemText}</span>`;
+            if (originalItem && originalItem.image) {
+                itemContent = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <img src="${originalItem.image}" alt="${itemText}" style="width: 30px; height: 30px; border-radius: 4px;" onerror="this.style.display='none';">
+                        <span>${itemText}</span>
+                    </div>
+                `;
+            }
+            
+            droppedItem.innerHTML = `
+                ${itemContent}
+                <button class="remove-btn" onclick="removeDroppedItem('${category}', ${droppedItems[category].length - 1})">×</button>
+            `;
+            
+            // Add to appropriate zone
+            const zoneContent = document.getElementById(`${category === 'pure' ? 'pure-substance' : 'mixture'}-content`);
+            const placeholder = zoneContent.querySelector('.zone-placeholder');
+            if (placeholder) placeholder.remove();
+            zoneContent.appendChild(droppedItem);
+            
+            // Remove from drag container
+            draggedElement.remove();
+            draggedElement = null;
+        }
+
+        function removeDroppedItem(category, index) {
+            // Remove from droppedItems array
+            const item = droppedItems[category][index];
+            droppedItems[category].splice(index, 1);
+            
+            // Remove from DOM
+            const zoneContent = document.getElementById(`${category === 'pure' ? 'pure-substance' : 'mixture'}-content`);
+            const droppedElements = zoneContent.querySelectorAll('.dropped-item');
+            if (droppedElements[index]) {
+                droppedElements[index].remove();
+            }
+            
+            // Add placeholder if zone is empty
+            if (droppedItems[category].length === 0) {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'zone-placeholder';
+                placeholder.textContent = category === 'pure' ? 'Drop pure substances here' : 'Drop mixtures here';
+                zoneContent.appendChild(placeholder);
+            }
+            
+            // Add back to drag container
+            const container = document.getElementById('drag-items-container');
+            const dragItem = document.createElement('div');
+            dragItem.className = 'drag-item';
+            dragItem.draggable = true;
+            dragItem.dataset.category = item.correctCategory;
+            dragItem.dataset.index = item.index;
+            dragItem.dataset.explanation = item.explanation;
+            
+            // Get the original item data to check for image
+            const originalItem = sorterQuestions[currentSorterIndex].items[parseInt(item.index)];
+            
+            // Add image if it exists
+            if (originalItem && originalItem.image) {
+                const img = document.createElement('img');
+                img.src = originalItem.image;
+                img.alt = item.text;
+                img.onerror = function() {
+                    this.src = '';
+                    this.alt = 'Image failed to load';
+                    this.style.display = 'none';
+                };
+                dragItem.appendChild(img);
+            }
+            
+            // Add text label
+            const textLabel = document.createElement('span');
+            textLabel.textContent = item.text;
+            dragItem.appendChild(textLabel);
+            
+            dragItem.addEventListener('dragstart', handleDragStart);
+            dragItem.addEventListener('dragend', handleDragEnd);
+            
+            // Add mobile touch listeners
+            dragItem.addEventListener('click', handleMobileItemClick);
+            
+            container.appendChild(dragItem);
+        }
+
+        function checkSorterAnswers() {
+            if (sorterAnswered) return;
+            
+            let correctCount = 0;
+            let totalItems = 0;
+            const feedbackItems = [];
+            
+            // Check pure substances
+            droppedItems.pure.forEach(item => {
+                totalItems++;
+                const isCorrect = item.correctCategory === 'pure';
+                if (isCorrect) {
+                    correctCount++;
+                    feedbackItems.push(`<div class="feedback-item correct">✅ <strong>${item.text}</strong> - Correct! <em>${item.explanation}</em></div>`);
+                } else {
+                    feedbackItems.push(`<div class="feedback-item incorrect">❌ <strong>${item.text}</strong> - This is actually a mixture. <em>${item.explanation}</em></div>`);
+                }
+            });
+            
+            // Check mixtures
+            droppedItems.mixture.forEach(item => {
+                totalItems++;
+                const isCorrect = item.correctCategory === 'mixture';
+                if (isCorrect) {
+                    correctCount++;
+                    feedbackItems.push(`<div class="feedback-item correct">✅ <strong>${item.text}</strong> - Correct! <em>${item.explanation}</em></div>`);
+                } else {
+                    feedbackItems.push(`<div class="feedback-item incorrect">❌ <strong>${item.text}</strong> - This is actually a pure substance. <em>${item.explanation}</em></div>`);
+                }
+            });
+            
+            // Check for items not sorted
+            const remainingItems = document.querySelectorAll('.drag-item');
+            remainingItems.forEach(item => {
+                totalItems++;
+                feedbackItems.push(`<div class="feedback-item incorrect">❌ <strong>${item.textContent}</strong> - Not sorted! <em>${item.dataset.explanation}</em></div>`);
+            });
+            
+            // Update visual feedback
+            document.querySelectorAll('.dropped-item').forEach((element, index) => {
+                const category = element.closest('.zone-content').id.includes('pure') ? 'pure' : 'mixture';
+                const item = droppedItems[category][index];
+                if (item && item.correctCategory !== category) {
+                    element.classList.add('incorrect');
+                }
+            });
+            
+            // Show feedback
+            const feedbackContainer = document.getElementById('sorter-feedback');
+            feedbackContainer.innerHTML = feedbackItems.join('') + 
+                `<div class="feedback-summary">Score: ${correctCount}/${totalItems} ${correctCount === totalItems ? '🎉 Perfect!' : correctCount >= Math.ceil(totalItems * 0.7) ? '👍 Good job!' : '💪 Keep practicing!'}</div>`;
+            feedbackContainer.classList.add('show');
+            
+            document.getElementById('check-sorter-btn').style.display = 'none';
+            document.getElementById('next-sorter-btn').style.display = 'inline-block';
+            document.getElementById('next-sorter-btn').disabled = false;
+            sorterAnswered = true;
+        }
+
+        function nextSorterQuestion() {
+            currentSorterIndex = (currentSorterIndex + 1) % sorterQuestions.length;
+            displaySorterQuestion();
+        }
+
+        function resetSorterDrill() {
+            currentSorterIndex = 0;
+            displaySorterQuestion();
+        }
+
+        // Formula practice functions
+        function displayFormulaQuestion() {
+            const question = shuffledFormulaQuestions[currentFormulaIndex];
+            
+            document.getElementById('formula-category').textContent = question.category;
+            document.getElementById('formula-question-text').textContent = question.question;
+            document.getElementById('formula-progress').textContent = `Question ${currentFormulaIndex + 1} of ${shuffledFormulaQuestions.length}`;
+            
+            const optionsContainer = document.getElementById('formula-answer-options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'answer-option';
+                optionElement.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+                optionElement.addEventListener('click', () => selectFormulaAnswer(index));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            document.getElementById('formula-explanation').classList.remove('show');
+            document.getElementById('next-formula-btn').disabled = true;
+            formulaAnswered = false;
+        }
+
+        function selectFormulaAnswer(selectedIndex) {
+            if (formulaAnswered) return;
+            
+            const question = shuffledFormulaQuestions[currentFormulaIndex];
+            const options = document.querySelectorAll('#formula-answer-options .answer-option');
+            
+            options.forEach((option, index) => {
+                option.classList.remove('selected');
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && index !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            document.getElementById('formula-explanation-text').textContent = question.explanation;
+            document.getElementById('formula-explanation').classList.add('show');
+            document.getElementById('next-formula-btn').disabled = false;
+            formulaAnswered = true;
+        }
+
+        function nextFormulaQuestion() {
+            currentFormulaIndex = (currentFormulaIndex + 1) % shuffledFormulaQuestions.length;
+            displayFormulaQuestion();
+        }
+
+        function shuffleFormulaQuestions() {
+            shuffledFormulaQuestions = shuffleArray(formulaQuestions);
+            currentFormulaIndex = 0;
+            displayFormulaQuestion();
+        }
+
+        // Tab switching functions
+        function switchToTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // Show/hide sections
+            if (tabName === 'multiple-choice') {
+                document.getElementById('multiple-choice-section').style.display = 'block';
+                document.getElementById('heating-curves-section').style.display = 'none';
+                document.getElementById('mixture-sorter-section').style.display = 'none';
+                document.getElementById('formula-practice-section').style.display = 'none';
+            } else if (tabName === 'heating-curves') {
+                document.getElementById('multiple-choice-section').style.display = 'none';
+                document.getElementById('heating-curves-section').style.display = 'block';
+                document.getElementById('mixture-sorter-section').style.display = 'none';
+                document.getElementById('formula-practice-section').style.display = 'none';
+                displayHeatingQuestion(); // Initialize heating curve display
+            } else if (tabName === 'mixture-sorter') {
+                document.getElementById('multiple-choice-section').style.display = 'none';
+                document.getElementById('heating-curves-section').style.display = 'none';
+                document.getElementById('mixture-sorter-section').style.display = 'block';
+                document.getElementById('formula-practice-section').style.display = 'none';
+                displaySorterQuestion(); // Initialize sorter display
+            } else if (tabName === 'formula-practice') {
+                document.getElementById('multiple-choice-section').style.display = 'none';
+                document.getElementById('heating-curves-section').style.display = 'none';
+                document.getElementById('mixture-sorter-section').style.display = 'none';
+                document.getElementById('formula-practice-section').style.display = 'block';
+                if (shuffledFormulaQuestions.length === 0) {
+                    shuffledFormulaQuestions = shuffleArray(formulaQuestions);
+                }
+                displayFormulaQuestion(); // Initialize formula display
+            }
+        }
+
+        // Event listeners
+        document.getElementById('next-btn').addEventListener('click', nextQuestion);
+        document.getElementById('shuffle-btn').addEventListener('click', shuffleQuestions);
+        
+        // Heating curve event listeners
+        document.getElementById('check-heating-btn').addEventListener('click', checkHeatingAnswers);
+        document.getElementById('next-heating-btn').addEventListener('click', nextHeatingQuestion);
+        document.getElementById('reset-heating-btn').addEventListener('click', resetHeatingDrill);
+        
+        // Sorter event listeners
+        document.getElementById('check-sorter-btn').addEventListener('click', checkSorterAnswers);
+        document.getElementById('next-sorter-btn').addEventListener('click', nextSorterQuestion);
+        document.getElementById('reset-sorter-btn').addEventListener('click', resetSorterDrill);
+        
+        // Add drop zone event listeners
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', handleDragOver);
+            zone.addEventListener('dragenter', handleDragEnter);
+            zone.addEventListener('dragleave', handleDragLeave);
+            zone.addEventListener('drop', handleDrop);
+            
+            // Add mobile click listeners to zone content
+            const zoneContent = zone.querySelector('.zone-content');
+            if (zoneContent) {
+                zoneContent.addEventListener('click', handleMobileZoneClick);
+            }
+        });
+        
+        // Formula practice event listeners
+        document.getElementById('next-formula-btn').addEventListener('click', nextFormulaQuestion);
+        document.getElementById('shuffle-formula-btn').addEventListener('click', shuffleFormulaQuestions);
+        
+        // Tab event listeners
+        document.getElementById('tab-multiple-choice').addEventListener('click', () => switchToTab('multiple-choice'));
+        document.getElementById('tab-heating-curves').addEventListener('click', () => switchToTab('heating-curves'));
+        document.getElementById('tab-mixture-sorter').addEventListener('click', () => switchToTab('mixture-sorter'));
+        document.getElementById('tab-formula-practice').addEventListener('click', () => switchToTab('formula-practice'));
+
+        // Element SDK implementation
+        async function onConfigChange(config) {
+            document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+            document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+            document.getElementById('section-title').textContent = config.section_title || defaultConfig.section_title;
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["main_title", config.main_title || defaultConfig.main_title],
+                ["subtitle", config.subtitle || defaultConfig.subtitle],
+                ["section_title", config.section_title || defaultConfig.section_title]
+            ]);
+        }
+
+        // Initialize
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+
+        // Start the quiz
+        displayQuestion();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99e33d9f02f96c4b',t:'MTc2MzA4OTAzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
