@@ -1465,6 +1465,7 @@
                         this.alt = 'Image failed to load';
                         this.style.display = 'none';
                     };
+                    img.draggable = false;
                     dragItem.appendChild(img);
                 }
                 
@@ -1491,14 +1492,29 @@
         }
 
         function handleDragStart(e) {
-            draggedElement = e.target;
-            e.target.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', e.target.outerHTML);
+            // Always work with the full drag-item wrapper, not its child (like img/span)
+            const item = e.currentTarget || e.target.closest('.drag-item');
+            if (!item) return;
+
+            draggedElement = item;
+            item.classList.add('dragging');
+            if (e.dataTransfer) {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/html', item.outerHTML);
+                // Use the full element as the drag image so the picture and label stay visually together
+                try {
+                    e.dataTransfer.setDragImage(item, item.offsetWidth / 2, item.offsetHeight / 2);
+                } catch (err) {
+                    // setDragImage may fail in some browsers; it's safe to ignore
+                }
+            }
         }
 
         function handleDragEnd(e) {
-            e.target.classList.remove('dragging');
+            const item = e.currentTarget || e.target.closest('.drag-item') || draggedElement;
+            if (item) {
+                item.classList.remove('dragging');
+            }
         }
 
         function handleMobileItemClick(e) {
@@ -1705,6 +1721,7 @@
                     this.alt = 'Image failed to load';
                     this.style.display = 'none';
                 };
+                img.draggable = false;
                 dragItem.appendChild(img);
             }
             
